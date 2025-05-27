@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Technics_full
       objectReference: {fileID: 0}
+    - target: {fileID: 1545741991792700670, guid: f5ec3a4462c0ba048b10badf60891f4e, type: 3}
+      propertyPath: m_Name
+      value: plateau
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

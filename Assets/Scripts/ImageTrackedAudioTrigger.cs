@@ -19,7 +19,20 @@ public class ImageTrackedAudioTrigger : MonoBehaviour
     [SerializeField]
     private List<ImageMusicPair> imageMusicMappings = new List<ImageMusicPair>();
 
+    // Le plateau à faire tourner, sera assigné via l'événement
+    private GameObject platinePlateau;
+
+    [SerializeField]
+    private float rotationSpeed = 90f;
+
     private Dictionary<string, AudioClip> imageToMusic;
+
+    private bool isSpinning = false;
+    private AudioClip currentClip = null;
+
+    // Champ public à assigner dans l’inspecteur (GameObject qui a PlaceOnPlane)
+    [SerializeField]
+    private PlaceOnPlane placeOnPlane;
 
     private void Awake()
     {
@@ -37,39 +50,76 @@ public class ImageTrackedAudioTrigger : MonoBehaviour
     private void OnEnable()
     {
         trackedImageManager.trackedImagesChanged += OnTrackedImagesChanged;
+
+        if (placeOnPlane != null)
+        {
+            placeOnPlane.OnPlateauInstantiated += OnPlateauReady;
+        }
+        else
+        {
+            Debug.LogWarning("PlaceOnPlane non assigné dans ImageTrackedAudioTrigger.");
+        }
     }
 
     private void OnDisable()
     {
         trackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
+
+        if (placeOnPlane != null)
+        {
+            placeOnPlane.OnPlateauInstantiated -= OnPlateauReady;
+        }
+    }
+
+    private void OnPlateauReady(GameObject plateau)
+    {
+        platinePlateau = plateau;
+        Debug.Log("Plateau assigné dans ImageTrackedAudioTrigger.");
+    }
+
+    private void Update()
+    {
+        if (isSpinning && platinePlateau != null)
+        {
+            platinePlateau.transform.Rotate(0f, rotationSpeed * Time.deltaTime, 0f);
+        }
     }
 
     private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
-        foreach (var trackedImage in eventArgs.updated)
+        AudioClip clipToPlay = null;
+
+        foreach (var trackedImage in trackedImageManager.trackables)
         {
             if (trackedImage.trackingState == TrackingState.Tracking)
             {
                 string imageName = trackedImage.referenceImage.name;
                 if (imageToMusic.ContainsKey(imageName))
                 {
-                    AudioClip clip = imageToMusic[imageName];
-                    if (audioSource.clip != clip)
-                    {
-                        audioSource.clip = clip;
-                        audioSource.Play();
-                        Debug.Log("Lecture de : " + imageName);
-                    }
+                    clipToPlay = imageToMusic[imageName];
+                    break;
                 }
             }
         }
 
-        foreach (var removedImage in eventArgs.removed)
+        if (clipToPlay != null)
         {
-            if (audioSource.isPlaying)
+            if (clipToPlay != currentClip)
             {
-                audioSource.Stop();
+                audioSource.clip = clipToPlay;
+                audioSource.Play();
+                currentClip = clipToPlay;
+                Debug.Log("Lecture de : " + clipToPlay.name);
             }
+            else if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+            isSpinning = true;
+        }
+        else
+        {
+            // Aucune image détectée, ne stoppe rien pour l’instant
         }
     }
 }

@@ -183,11 +183,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98c57c60d5f37d34cb0d009317bd15af, type: 3}
---- !u!1 &60377611 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8297056788253150765, guid: 98c57c60d5f37d34cb0d009317bd15af, type: 3}
-  m_PrefabInstance: {fileID: 60377610}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &682056374
 GameObject:
   m_ObjectHideFlags: 0
@@ -609,7 +604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_PlacedPrefab: {fileID: 4098161530378779287, guid: cc5c91bae5235514db7129ded2b8c85d, type: 3}
-  visualObject: {fileID: 60377611}
+  visualObject: {fileID: 0}
 --- !u!114 &1219980869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -629,6 +624,8 @@ MonoBehaviour:
     musicClip: {fileID: 8300000, guid: e0ed1566af3c88648bc22735271656db, type: 3}
   - imageName: igor
     musicClip: {fileID: 8300000, guid: 73ad9f97cf70d9b4bad23aa69f7d26f6, type: 3}
+  rotationSpeed: 90
+  placeOnPlane: {fileID: 1219980868}
 --- !u!114 &1219980870
 MonoBehaviour:
   m_ObjectHideFlags: 0
